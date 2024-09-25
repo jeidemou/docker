@@ -1,0 +1,38 @@
+version: '3.9'
+
+services:
+  db:
+    image: postgres:12.20-alpine3.20
+    restart: always
+    shm_size: 128mb
+    container_name: my-container_name
+    hostname: myhost
+    environment:
+      POSTGRES_DB: admin
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+    volumes:
+      - ~/Users/Documents/CursoPROGRAMACION//DOCKER-COMPOSE/proyecto/docker-volume/data:/var/lib/postgresql/data
+      - ./sql/create_schema.sql:/docker-entrypoint-initdb.d/create_schema.sql
+      - ./sql/data.sql:/docker-entrypoint-initdb.d/data.sql
+    ports:
+      - "9091:5432"
+
+  
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - db
+    ports:
+      - "5000:5000"  # Cambia según el puerto que use tu aplicación
+    volumes:
+      - .:/app  # Monta el directorio actual en el contenedor
+
+
+
+
+
+
+      
